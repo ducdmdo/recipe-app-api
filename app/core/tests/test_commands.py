@@ -21,8 +21,11 @@ class CommandTests(SimpleTestCase):
 
         patched_check.assert_called_once_with(databases=['default'])
 
+    """patch here is applying inside-out; it means patched_sleep = @patch"""
+    """('time.sleep)"""
+    """"patched_check = """
+    """@patch('core.management.commands.wait_for_db.Command.check')"""
     @patch('time.sleep')
-    # patch here is applying inside-out; it means patched_sleep = @patch('time.sleep), patched_check = @patch('core.management.commands.wait_for_db.Command.check')
     def test_wait_for_db_delay(self, patched_sleep, patched_check):
         """Test waiting for database when getting OperationalError """
         patched_check.side_effect = [Psycopg2Error] * 2 + \
@@ -32,3 +35,4 @@ class CommandTests(SimpleTestCase):
 
         self.assertEqual(patched_check.call_count, 6)
         patched_check.assert_called_with(databases=['default'])
+        
